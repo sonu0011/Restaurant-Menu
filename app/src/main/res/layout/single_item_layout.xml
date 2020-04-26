@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="2dp">
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/image_bg"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/item_add_cart"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:layout_marginTop="125sp"
+        android:layout_marginStart="75sp"
+        app:fabCustomSize="50sp"
+        android:src="@drawable/ic_add_black_24dp"
+        android:layout_marginLeft="120sp" />
+
+    <LinearLayout
+        android:layout_below="@+id/item_image"
+        android:layout_width="wrap_content"
+        android:weightSum="3"
+        android:layout_marginTop="15dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_image"
+            android:padding="5dp"
+            android:text="Allo Pakora"
+
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+
+            android:id="@+id/item_price"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+
+            android:padding="5dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/price"
+            android:textSize="16sp"
+            />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
