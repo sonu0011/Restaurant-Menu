@@ -11,13 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.restaurantmenu.Localdb.entities.Item;
 import com.example.restaurantmenu.R;
+import com.example.restaurantmenu.Utill.OnFloatingButtonClickListner;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
-    List<Item> list;
+    private List<Item> list;
+    private  OnFloatingButtonClickListner onFloatingButtonClickListner;
+
 
     public ItemAdapter(List<Item> list) {
         this.list = list;
@@ -38,6 +41,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     }
 
+    public void setOnFloatingButtonClickListner(OnFloatingButtonClickListner onFloatingButtonClickListner) {
+        this.onFloatingButtonClickListner = onFloatingButtonClickListner;
+    }
+
     @Override
     public int getItemCount() {
         return list.size();
@@ -53,6 +60,13 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             item_name = itemView.findViewById(R.id.item_title);
             item_price = itemView.findViewById(R.id.item_price);
             floatingActionButton = itemView.findViewById(R.id.item_add_cart);
+
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onFloatingButtonClickListner.onClick(list.get(getAdapterPosition()).getItemID());
+                }
+            });
 
         }
     }

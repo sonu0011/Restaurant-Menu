@@ -19,6 +19,10 @@ public class ItemViewModel extends AndroidViewModel {
 
     }
 
+    public List<Item>getSearchedItems(String dishName){
+        return menuRepository.getSearchedItems(dishName);
+    }
+
     public List<Item> getItemsById(int id) {
         return  menuRepository.getItemsById(id);
     }

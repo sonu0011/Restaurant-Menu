@@ -2,27 +2,31 @@ package com.example.restaurantmenu.Views;
 
 import android.os.Bundle;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.restaurantmenu.Localdb.entities.Cart;
 import com.example.restaurantmenu.Localdb.entities.Item;
 import com.example.restaurantmenu.R;
+import com.example.restaurantmenu.Utill.OnFloatingButtonClickListner;
+import com.example.restaurantmenu.ViewModel.CartViewModel;
 import com.example.restaurantmenu.ViewModel.ItemViewModel;
 import com.example.restaurantmenu.adapter.ItemAdapter;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
 
-public class BlankFragment extends Fragment {
+public class ItemFragment extends Fragment implements OnFloatingButtonClickListner {
 
-    public BlankFragment() {
+    public ItemFragment() {
     }
 
     private View view;
@@ -30,11 +34,14 @@ public class BlankFragment extends Fragment {
     private RecyclerView recyclerView;
     private ItemAdapter itemAdapter;
     private ItemViewModel itemViewModel;
-    private static final String TAG = "BlankFragment";
+    private CartViewModel cartViewModel;
+    private static final String TAG = "ItemFragment";
+    private CoordinatorLayout coordinatorLayout;
 
 
-    public static BlankFragment setCategoryId(int val) {
-        BlankFragment fragment = new BlankFragment();
+
+    public static ItemFragment setCategoryId(int val) {
+        ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
         args.putInt("catId", val);
         fragment.setArguments(args);
@@ -47,14 +54,15 @@ public class BlankFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_blank, container, false);
         recyclerView = view.findViewById(R.id.recyleview);
+        itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
+        cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
+        coordinatorLayout = view.findViewById(R.id.coordinatorLayout);
 
         if (getArguments() != null) {
             catId = getArguments().getInt("catId", 0);
-            Log.d(TAG, "onCreateView: catId is "+catId);
-            itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
             List<Item> list = itemViewModel.getItemsById(catId);
-            Log.d(TAG, "onCreateView: listSize "+list.size());
             itemAdapter = new ItemAdapter(list);
+            itemAdapter.setOnFloatingButtonClickListner(this);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(itemAdapter);
@@ -64,4 +72,21 @@ public class BlankFragment extends Fragment {
     }
 
 
+    @Override
+    public void onClick(int itemId) {
+
+        if (cartViewModel.isItemPresentInCart(itemId) > 0){
+            Snackbar.make(coordinatorLayout,"This Item is already present in your cart",Snackbar.LENGTH_SHORT).show();
+
+        }
+        else {
+            cartViewModel.insertIntoCart(new Cart(itemId));
+            Snackbar.make(coordinatorLayout,"Item is added to your cart",Snackbar.LENGTH_SHORT).show();
+
+
+        }
+
+
+
+    }
 }
