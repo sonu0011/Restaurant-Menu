@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     private List<Item> list;
-    private  OnFloatingButtonClickListner onFloatingButtonClickListner;
+    private OnFloatingButtonClickListner onFloatingButtonClickListner;
 
 
     public ItemAdapter(List<Item> list) {
@@ -29,19 +29,52 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.single_item_layout,parent,false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.single_item_layout, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Item item =  list.get(position);
-        Picasso.get().load(item.getItemImageUrl()).into(holder.item_image);
-        holder.item_price.setText("$ "+item.getItemPrice());
+        Item item = list.get(position);
+        if (item.getItemImageUrl().equals("")){
+            holder.item_image.setImageResource(R.drawable.placeholder);
+        }
+        else {
+            Picasso picasso = Picasso.get();
+            picasso.setIndicatorsEnabled(true);
+            picasso.setLoggingEnabled(true);
+            picasso.load(item.getItemImageUrl())
+                    .error(R.drawable.placeholder)
+                    .placeholder(R.drawable.placeholder)
+                    .into(holder.item_image);
+        }
+
+        if (item.getItemType().equals("")){
+            holder.image_vegan.setVisibility(View.GONE);
+            holder.image_gluten.setVisibility(View.GONE);
+        }
+        else if (item.getItemType().contains(",")){
+            holder.image_vegan.setImageResource(R.mipmap.vegan);
+            holder.image_gluten.setImageResource(R.mipmap.gluten);
+        }
+        else {
+            if (item.getItemType().equalsIgnoreCase("GF")){
+                holder.image_vegan.setVisibility(View.GONE);
+                holder.image_gluten.setImageResource(R.mipmap.gluten);
+            }
+            if (item.getItemType().equalsIgnoreCase("V")){
+                holder.image_gluten.setVisibility(View.GONE);
+                //holder.image_vegan.set
+                holder.image_vegan.setImageResource(R.mipmap.vegan);
+
+            }
+
+        }
+        holder.item_price.setText("$ " + Float.valueOf(item.getItemPrice()));
         holder.item_name.setText(item.getItemName());
 
     }
 
-    public void setOnFloatingButtonClickListner(OnFloatingButtonClickListner onFloatingButtonClickListner) {
+    public void setOnFloatingButtonClickListener(OnFloatingButtonClickListner onFloatingButtonClickListner) {
         this.onFloatingButtonClickListner = onFloatingButtonClickListner;
     }
 
@@ -51,11 +84,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView item_image;
-        TextView item_name,item_price;
+        ImageView item_image, image_gluten, image_vegan;
+        TextView item_name, item_price;
         FloatingActionButton floatingActionButton;
+
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            image_gluten = itemView.findViewById(R.id.gluten);
+            image_vegan = itemView.findViewById(R.id.vegan);
             item_image = itemView.findViewById(R.id.item_image);
             item_name = itemView.findViewById(R.id.item_title);
             item_price = itemView.findViewById(R.id.item_price);
@@ -64,7 +100,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             floatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onFloatingButtonClickListner.onClick(list.get(getAdapterPosition()).getItemID());
+                    onFloatingButtonClickListner.onClick(list.get(getAdapterPosition()).getItemUniqeId());
                 }
             });
 

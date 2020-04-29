@@ -2,43 +2,57 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/searchcoordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5sp"
+    android:layout_margin="2sp"
     android:padding="5sp"
-    android:id="@+id/searchcoordinatorLayout"
     tools:context=".Views.SearchResultActivity">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 
     <TextView
         android:id="@+id/heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="Showing result for"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/query_string"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/heading"
-        android:layout_toRightOf="@+id/heading"
-        android:padding="10dp"
-        android:text="Pakora"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="@color/colorAccent" />
+    <RelativeLayout
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchRecycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/heading"
-        android:layout_margin="2dp"
-        android:padding="5sp" />
-</RelativeLayout>
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/no_result_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/no_result_found"
+            android:layout_centerInParent="true"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/no_result_found_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/no_result_found"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5sp"
+            android:gravity="center"
+            android:padding="5sp"
+            android:text="@string/no_result_message"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/searchRecycleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:padding="5sp" />
+    </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

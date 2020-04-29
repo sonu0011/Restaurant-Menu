@@ -1,5 +1,5 @@
 package com.example.restaurantmenu.Utill;
 
 public interface OnFloatingButtonClickListner {
-    void onClick(int itemId);
+    void onClick(int categoryId);
 }

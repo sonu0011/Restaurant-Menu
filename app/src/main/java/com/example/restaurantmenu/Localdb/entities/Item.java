@@ -10,12 +10,13 @@ public class Item {
 
     @ForeignKey(entity = SubCategory.class,
             parentColumns = "subCategoryID", childColumns = "subCategoryID")
-    private int subCategoryID;
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
+    private int itemUniqeId;
+    private String itemType;
+    private int subCategoryID;
     private int itemID;
-
     private String itemName;
     private String itemStatus;
     private String itemPrice;
@@ -23,7 +24,8 @@ public class Item {
     private String itemImageUrl;
 
 
-    public Item(int subCategoryID, int itemID, String itemName, String itemStatus, String itemPrice, String itemDeliveryType, String itemImageUrl) {
+    public Item(String itemType,int subCategoryID, int itemID, String itemName, String itemStatus, String itemPrice, String itemDeliveryType, String itemImageUrl) {
+        this.itemType = itemType;
         this.subCategoryID = subCategoryID;
         this.itemID = itemID;
         this.itemName = itemName;
@@ -31,6 +33,19 @@ public class Item {
         this.itemPrice = itemPrice;
         this.itemDeliveryType = itemDeliveryType;
         this.itemImageUrl = itemImageUrl;
+
+    }
+
+    public void setItemUniqeId(int itemUniqeId) {
+        this.itemUniqeId = itemUniqeId;
+    }
+
+    public int getItemUniqeId() {
+        return itemUniqeId;
+    }
+
+    public String getItemType() {
+        return itemType;
     }
 
     public int getSubCategoryID() {

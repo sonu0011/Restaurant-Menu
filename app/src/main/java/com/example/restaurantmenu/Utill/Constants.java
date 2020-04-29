@@ -11,6 +11,7 @@ public class Constants {
     public static final String APP_END = "appEnd";
     public static final String LAST_UPDATED_DATE = "lastUpdatedDate";
     public static final String DATABASE_NAME = "menu_database";
-    public static final String SEARCHED_QUERY ="searched_query";
+    public static final String SEARCHED_QUERY = "searched_query";
 
+    public static final String SUB_CAT_ID = "sub_cat_id";
 }

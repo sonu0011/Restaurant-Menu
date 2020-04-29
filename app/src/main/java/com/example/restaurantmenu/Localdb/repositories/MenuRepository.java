@@ -2,8 +2,10 @@ package com.example.restaurantmenu.Localdb.repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.restaurantmenu.Localdb.dao.CartDao;
 import com.example.restaurantmenu.Localdb.dao.CategoryDao;
@@ -23,18 +25,28 @@ public class MenuRepository {
     private List<Category> categoryList;
     private List<Item> itemList;
     private List<SubCategory> subCategoryList;
-
+    private static final String TAG = "MenuRepository";
     private CategoryDao categoryDao;
     private ItemDao itemDao;
     private SubCategoryDao subCategoryDao;
     private CartDao cartDao;
     private LiveData<Integer> cartCount;
     private List<Item> searchedItems;
-    private  int result ;
+    private int result;
+    private static MenuRepository menuRepository;
+    private MutableLiveData<Boolean> showProgressBar = new MutableLiveData<>();
+
+    public static MenuRepository getMenuRepository() {
+        if (menuRepository == null) {
+
+            menuRepository = new MenuRepository();
+
+        }
+        return menuRepository;
+    }
 
 
-
-    public MenuRepository(Application application) {
+    public  void initDao(Application application){
 
         MenuDatabase menuDatabase = MenuDatabase.getDatabase(application);
         categoryDao = menuDatabase.getCategoryDao();
@@ -46,9 +58,24 @@ public class MenuRepository {
 
     }
 
-    public List<Item>getSearchedItems(String dishName){
+
+
+
+    public List<SubCategory> getAllSubCategoryList() {
         try {
-            searchedItems = new SearchedItemsAsync(itemDao,dishName).execute().get();
+            subCategoryList = new GetSubcategoriesAsync(subCategoryDao).execute().get();
+
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return subCategoryList;
+    }
+
+    public List<Item> getSearchedItems(String dishName) {
+        try {
+            searchedItems = new SearchedItemsAsync(itemDao, dishName).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -61,9 +88,10 @@ public class MenuRepository {
         new InsertIntoCartAsync(cartDao).execute(cartItem);
 
     }
-    public int isItemPresentInCart(int itemId){
+
+    public int isItemPresentInCart(int itemId) {
         try {
-             result = new IsItemPresentInCartAsync(cartDao).execute(itemId).get();
+            result = new IsItemPresentInCartAsync(cartDao).execute(itemId).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -76,12 +104,18 @@ public class MenuRepository {
         return cartCount;
     }
 
+    public MutableLiveData<Boolean> getShowProgressBar() {
+        return showProgressBar;
+    }
+
     public List<Category> getAllCategories() {
 
         try {
             categoryList = new GetCategoryAsync(categoryDao).execute().get();
+
         } catch (ExecutionException e) {
             e.printStackTrace();
+            Log.d(TAG, "getAllCategories: ");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -98,17 +132,6 @@ public class MenuRepository {
             e.printStackTrace();
         }
         return itemList;
-    }
-
-    public List<SubCategory> getAllSubcategories() {
-        try {
-            subCategoryList = new GetSubcategoriesAsync(subCategoryDao).execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return subCategoryList;
     }
 
     public void insertCategory(Category category) {
@@ -228,7 +251,7 @@ public class MenuRepository {
 
 
         @Override
-        protected Void doInBackground(Cart ... carts) {
+        protected Void doInBackground(Cart... carts) {
             cartDao.insertIntoCart(carts[0]);
             return null;
         }
@@ -239,11 +262,10 @@ public class MenuRepository {
         private ItemDao itemDao;
         private String dishName;
 
-        SearchedItemsAsync(ItemDao itemDao,String dishName) {
+        SearchedItemsAsync(ItemDao itemDao, String dishName) {
             this.itemDao = itemDao;
             this.dishName = dishName;
         }
-
 
 
         @Override
@@ -252,7 +274,7 @@ public class MenuRepository {
         }
     }
 
-    private static class IsItemPresentInCartAsync extends AsyncTask<Integer, Void,Integer> {
+    private static class IsItemPresentInCartAsync extends AsyncTask<Integer, Void, Integer> {
 
         private CartDao cartDao;
 
@@ -262,7 +284,7 @@ public class MenuRepository {
 
         @Override
         protected Integer doInBackground(Integer... integers) {
-            return  cartDao.isItemPresentInCart(integers[0]);
+            return cartDao.isItemPresentInCart(integers[0]);
 
         }
     }

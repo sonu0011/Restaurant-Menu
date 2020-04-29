@@ -4,5 +4,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="allo_pakora">Allo Pakora</string>
+    <string name="no_result_message">We can\'t find any item matching \n your search</string>
+    <string name="no_result_found">No Result Found</string>
 
 </resources>

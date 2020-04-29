@@ -17,15 +17,13 @@ public class SubCategory {
             parentColumns = "categoryID",
             childColumns = "categoryID")
     private String categoryID;
-    private String subCategoryImageUrl;
     private String subCategoryName;
 
-    public SubCategory(String subCategoryStatus, String subCategoryCode, int subCategoryID, String categoryID, String subCategoryImageUrl, String subCategoryName) {
+    public SubCategory(String subCategoryStatus, String subCategoryCode, int subCategoryID, String categoryID, String subCategoryName) {
         this.subCategoryStatus = subCategoryStatus;
         this.subCategoryCode = subCategoryCode;
         this.subCategoryID = subCategoryID;
         this.categoryID = categoryID;
-        this.subCategoryImageUrl = subCategoryImageUrl;
         this.subCategoryName = subCategoryName;
     }
 
@@ -45,9 +43,6 @@ public class SubCategory {
         return categoryID;
     }
 
-    public String getSubCategoryImageUrl() {
-        return subCategoryImageUrl;
-    }
 
     public String getSubCategoryName() {
         return subCategoryName;

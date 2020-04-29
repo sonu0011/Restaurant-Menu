@@ -8,70 +8,64 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.restaurantmenu.Localdb.entities.Cart;
 import com.example.restaurantmenu.Localdb.entities.Item;
 import com.example.restaurantmenu.R;
 import com.example.restaurantmenu.Utill.Constants;
-import com.example.restaurantmenu.Utill.OnFloatingButtonClickListner;
-import com.example.restaurantmenu.ViewModel.CartViewModel;
-import com.example.restaurantmenu.ViewModel.CategoryViewModel;
-import com.example.restaurantmenu.ViewModel.ItemViewModel;
+import com.example.restaurantmenu.ViewModel.ItemFragmentViewModel;
 import com.example.restaurantmenu.adapter.ItemAdapter;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-public class SearchResultActivity extends AppCompatActivity  implements OnFloatingButtonClickListner {
+public class SearchResultActivity extends AppCompatActivity {
 
-    private String searched_query;
-    private ItemViewModel itemViewModel;
-    private TextView heading;
-    private RecyclerView recyclerView;
-    private ItemAdapter itemAdapter;
-    private CartViewModel cartViewModel;
     private TextView textCartItemCount;
     private CoordinatorLayout coordinatorLayout;
+    private ItemFragmentViewModel itemFragmentViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
 
-        searched_query = getIntent().getStringExtra(Constants.SEARCHED_QUERY);
-        itemViewModel = new ViewModelProvider(this).get(ItemViewModel.class);
-        heading = findViewById(R.id.query_string);
-        heading.setText(searched_query);
-        recyclerView = findViewById(R.id.searchRecycleView);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Taste Of India");
+        String searched_query = getIntent().getStringExtra(Constants.SEARCHED_QUERY);
+        RecyclerView recyclerView = findViewById(R.id.searchRecycleView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setHasFixedSize(true);
-        cartViewModel  = new ViewModelProvider(this).get(CartViewModel.class);
-        coordinatorLayout =findViewById(R.id.searchcoordinatorLayout);
-        List<Item> list = itemViewModel.getSearchedItems(searched_query);
+        TextView textView = findViewById(R.id.heading);
+        textView.setText("Showing results for " + searched_query + "");
+
+        coordinatorLayout = findViewById(R.id.searchcoordinatorLayout);
+        itemFragmentViewModel = new ViewModelProvider(this).get(ItemFragmentViewModel.class);
+
+        List<Item> list = itemFragmentViewModel.getSearchedItems(searched_query);
 
         if (list.size() == 0) {
-            Toast.makeText(this, "No Result Found", Toast.LENGTH_LONG).show();
+
+            findViewById(R.id.no_result_found).setVisibility(View.VISIBLE);
+            findViewById(R.id.no_result_found_msg).setVisibility(View.VISIBLE);
         } else {
 
-            itemAdapter = new ItemAdapter(list);
-            itemAdapter.setOnFloatingButtonClickListner(this);
+            ItemAdapter itemAdapter = new ItemAdapter(list);
+            itemAdapter.setOnFloatingButtonClickListener(itemFragmentViewModel);
+
             recyclerView.setAdapter(itemAdapter);
         }
 
 
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        cartViewModel.getCartCount().observe(this, new Observer<Integer>() {
+        itemFragmentViewModel.getNumOfCartItems().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 int count = integer;
@@ -80,6 +74,13 @@ public class SearchResultActivity extends AppCompatActivity  implements OnFloati
                     textCartItemCount.setText(String.valueOf(count));
 
                 }
+            }
+        });
+
+        itemFragmentViewModel.getMessage().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                Snackbar.make(coordinatorLayout, s, Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -92,25 +93,11 @@ public class SearchResultActivity extends AppCompatActivity  implements OnFloati
 
         View actionView = menuItem.getActionView();
         textCartItemCount = actionView.findViewById(R.id.cart_badge);
-        int count = cartViewModel.getCartCount().getValue();
+        int count = itemFragmentViewModel.getNumOfCartItems().getValue();
         textCartItemCount.setText(String.valueOf(count));
 
         return true;
     }
 
-    @Override
-    public void onClick(int itemId) {
 
-        if (cartViewModel.isItemPresentInCart(itemId) > 0){
-            Snackbar.make(coordinatorLayout,"This Item is already present in your cart",Snackbar.LENGTH_SHORT).show();
-
-        }
-        else {
-
-            cartViewModel.insertIntoCart(new Cart(itemId));
-            Snackbar.make(coordinatorLayout,"Item is added to your cart",Snackbar.LENGTH_SHORT).show();
-
-
-        }
-    }
 }

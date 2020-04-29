@@ -1,62 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="2dp">
+    android:layout_marginTop="10sp"
+    android:padding="2sp"
+    android:layout_marginStart="3sp"
+    android:layout_marginLeft="3sp">
 
-    <ImageView
-        android:id="@+id/item_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:background="@drawable/image_bg"
-        android:scaleType="centerCrop"
-        tools:ignore="ContentDescription" />
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/item_cardView"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/frame_layout"
+            app:layout_constraintLeft_toLeftOf="@id/frame_layout"
+            app:layout_constraintLeft_toRightOf="@id/frame_layout"
+            app:layout_constraintStart_toStartOf="@id/frame_layout">
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/item_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@id/frame_layout"
+                app:layout_constraintEnd_toEndOf="@id/frame_layout"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@id/frame_layout"
+                app:layout_constraintTop_toTopOf="@id/frame_layout"
+                app:layout_constraintVertical_bias="0.085" />
+
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/item_add_cart"
         android:layout_width="50sp"
         android:layout_height="50sp"
-        android:layout_marginTop="125sp"
-        android:layout_marginStart="75sp"
-        app:fabCustomSize="50sp"
+        android:layout_marginTop="130dp"
         android:src="@drawable/ic_add_black_24dp"
-        android:layout_marginLeft="120sp" />
+        app:fabCustomSize="50sp"
+        app:layout_constraintHorizontal_bias="0.86"
+        app:layout_constraintLeft_toLeftOf="@id/frame_layout"
+        app:layout_constraintRight_toRightOf="@id/frame_layout"
+        app:layout_constraintTop_toTopOf="@id/frame_layout" />
 
-    <LinearLayout
-        android:layout_below="@+id/item_image"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/gluten"
         android:layout_width="wrap_content"
-        android:weightSum="3"
-        android:layout_marginTop="15dp"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/item_title"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/item_image"
-            android:padding="5dp"
-            android:text="Allo Pakora"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
 
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-
-            android:id="@+id/item_price"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-
-            android:padding="5dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/price"
-            android:textSize="16sp"
-            />
-
-    </LinearLayout>
+        android:background="@drawable/veg_glu_bg"
+        android:src="@mipmap/gluten"
+        app:layout_constraintBottom_toTopOf="@id/item_title"
+        app:layout_constraintHorizontal_bias="0.09"
 
 
-</RelativeLayout>
+        app:layout_constraintRight_toRightOf="@id/frame_layout"
+        app:layout_constraintStart_toStartOf="@id/frame_layout"
+        app:layout_constraintTop_toBottomOf="@id/frame_layout" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/vegan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/veg_glu_bg"
+        android:src="@mipmap/vegan"
+        app:layout_constraintBottom_toTopOf="@id/item_title"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintLeft_toRightOf="@+id/gluten"
+        app:layout_constraintRight_toRightOf="@id/frame_layout"
+        app:layout_constraintTop_toBottomOf="@id/frame_layout" />
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/frame_layout"
+        android:padding="5sp"
+        android:text="@string/allo_pakora"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="16sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/item_price"
+        app:layout_constraintEnd_toStartOf="@id/item_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gluten" />
+
+    <TextView
+        android:id="@+id/item_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:padding="2dp"
+        android:text="@string/price"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@id/frame_layout"
+        app:layout_constraintTop_toBottomOf="@id/frame_layout" />
+</androidx.constraintlayout.widget.ConstraintLayout>
